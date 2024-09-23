@@ -1,0 +1,13 @@
+[Unit]
+Description=nsp-ntfy
+After=network.target
+
+[Service]
+Type=Simple
+User=username
+WorkingDirectory=/home/username/repositories/nsp-ntfy
+ExecStart=/home/username/repositories/nsp-ntfy/nsp-ntfy.sh /home/username/nsp-ntfy.json /home/username/nsp.json
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

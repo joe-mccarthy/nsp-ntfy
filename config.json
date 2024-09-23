@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "mqtt_topic": "mqtt-topic",
+            "ntfy": {
+                "topic": "ntft-topic",
+                "options": {
+                    "title": "notification-title",
+                    "priority": 3,
+                    "tags": [
+                        "blue_square"
+                    ]
+                }
+            }
+        }
+    ],
+    "logging": {
+        "file": "ntfy.log",
+        "level": "DEBUG"
+    }
+}
