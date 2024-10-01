@@ -97,7 +97,7 @@ class NtfyOptions(JSONWizard):
 
     title: Optional[str]
     priority: Optional[int] = 3
-    tags: list[str] = field(default_factory=str)
+    tags: list[str] = field(default_factory=list)
 
 
 @dataclass
