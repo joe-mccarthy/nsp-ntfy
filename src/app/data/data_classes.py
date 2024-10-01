@@ -8,18 +8,44 @@ import os.path
 
 @dataclass
 class LoggingFormatConfig(JSONWizard):
+    """
+    Represents the configuration for logging format.
+
+    Attributes:
+        date (str): The date format for logging.
+        output (str): The output format for logging.
+    """
+
     date: str
     output: str
 
 
 @dataclass
 class LoggingRotationConfig(JSONWizard):
+    """
+    Represents the configuration for logging rotation.
+
+    Attributes:
+        size (int): The maximum size (in bytes) of the log file before rotation.
+        backup (int): The number of backup log files to keep.
+    """
+
     size: int
     backup: int
 
 
 @dataclass
 class LoggingConfig(JSONWizard):
+    """
+    Represents the configuration for logging.
+
+    Attributes:
+        path (Optional[str]): The path to the log file.
+        level (Optional[str]): The logging level.
+        format (Optional[LoggingFormatConfig]): The logging format configuration.
+        rotation (Optional[LoggingRotationConfig]): The logging rotation configuration.
+    """
+
     path: Optional[str] = None
     level: Optional[str] = None
     format: Optional[LoggingFormatConfig] = None
@@ -28,6 +54,23 @@ class LoggingConfig(JSONWizard):
 
 @dataclass
 class ModuleLoggingConfig(LoggingConfig):
+    """
+    Configuration class for module-specific logging settings.
+
+    Attributes:
+        file (Optional[str]): The file path for the log file. Defaults to None.
+    """
+
+    """
+        Merge the given logging configuration with the current configuration.
+
+        Args:
+            logging_config (LoggingConfig): The logging configuration to merge.
+
+        Returns:
+            None
+    """
+
     file: Optional[str] = None
 
     def merge(self, logging_config: LoggingConfig):
@@ -43,6 +86,15 @@ class ModuleLoggingConfig(LoggingConfig):
 
 @dataclass
 class NtfyOptions(JSONWizard):
+    """
+    Represents the options for a notification in the Ntfy application.
+
+    Attributes:
+        title (Optional[str]): The title of the notification.
+        priority (Optional[int]): The priority of the notification. Defaults to 3.
+        tags (list[str]): The tags associated with the notification. Defaults to an empty list.
+    """
+
     title: Optional[str]
     priority: Optional[int] = 3
     tags: list[str] = field(default_factory=str)
@@ -50,30 +102,71 @@ class NtfyOptions(JSONWizard):
 
 @dataclass
 class Ntfy(JSONWizard):
+    """
+    Represents a notification object.
+
+    Attributes:
+        topic (str): The topic of the notification.
+        options (Optional[NtfyOptions]): The options for the notification. Defaults to None.
+    """
+
     topic: str
     options: Optional[NtfyOptions] = None
 
 
 @dataclass
 class TopicConfig(JSONWizard):
+    """
+    Represents the configuration for a topic.
+
+    Attributes:
+        mqtt_topic (str): The MQTT topic.
+        ntfy (Ntfy): The notification configuration.
+    """
+
     mqtt_topic: str
     ntfy: Ntfy
 
 
 @dataclass
 class NtfyModuleConfig(JSONWizard):
+    class NtfyModuleConfig:
+        """
+        Represents the configuration for an Ntfy module.
+
+        Attributes:
+            logging (ModuleLoggingConfig): The logging configuration for the module.
+            configurations (list[TopicConfig]): The list of topic configurations for the module.
+        """
+
     logging: ModuleLoggingConfig
     configurations: list[TopicConfig] = field(default_factory=list)
 
 
 @dataclass
 class MQTTConfig(JSONWizard):
+    """
+    Represents the MQTT configuration.
+
+    Attributes:
+        enabled (Optional[bool]): Whether MQTT is enabled. Defaults to False.
+        host (Optional[str]): The MQTT host. Defaults to "mqtt://localhost".
+    """
+
     enabled: Optional[bool] = False
     host: Optional[str] = "mqtt://localhost"
 
 
 @dataclass
 class DeviceConfig(JSONWizard):
+    """
+    Represents the configuration for a device.
+
+    Attributes:
+        name (str): The name of the device.
+        mqtt (MQTTConfig): The MQTT configuration for the device.
+    """
+
     name: str
     mqtt: MQTTConfig
 
@@ -81,6 +174,15 @@ class DeviceConfig(JSONWizard):
 def __configure_logging(
     module_logging: ModuleLoggingConfig, root_logging: LoggingConfig
 ) -> None:
+    """
+    Configures logging based on the provided module_logging and root_logging configurations.
+    Args:
+        module_logging (ModuleLoggingConfig): The configuration for module-specific logging.
+        root_logging (LoggingConfig): The root logging configuration.
+    Returns:
+        None
+    """
+
     module_logging.merge(root_logging)
     log_conf = module_logging
 
