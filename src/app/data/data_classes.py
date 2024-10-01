@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import List, Optional
 from dataclass_wizard import JSONWizard
 import logging
 from logging.handlers import RotatingFileHandler
@@ -87,17 +87,17 @@ class ModuleLoggingConfig(LoggingConfig):
 @dataclass
 class NtfyOptions(JSONWizard):
     """
-    Represents the options for a notification in the Ntfy application.
+    Represents the options for a notification.
 
     Attributes:
         title (Optional[str]): The title of the notification.
         priority (Optional[int]): The priority of the notification. Defaults to 3.
-        tags (list[str]): The tags associated with the notification. Defaults to an empty list.
+        tags (List[str]): The tags associated with the notification. Defaults to an empty list.
     """
 
     title: Optional[str]
     priority: Optional[int] = 3
-    tags: list[str] = field(default_factory=list)
+    tags: List[str] = field(default_factory=list)
 
 
 @dataclass
