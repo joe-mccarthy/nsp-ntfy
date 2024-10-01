@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, List
 from dataclass_wizard import JSONWizard
 import logging
 from logging.handlers import RotatingFileHandler
