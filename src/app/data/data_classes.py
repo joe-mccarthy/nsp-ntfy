@@ -140,8 +140,7 @@ class NtfyModuleConfig(JSONWizard):
         """
 
     logging: ModuleLoggingConfig
-    configurations: list[TopicConfig] = field(default_factory=list)
-
+    configurations: List[TopicConfig] = field(default_factory=list)
 
 @dataclass
 class MQTTConfig(JSONWizard):
