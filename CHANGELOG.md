@@ -7,5 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-  
-[unreleased]: https://github.com/joe-mccarthy/nsp-ntfy/compare/...HEAD
+## [1.0.0]
+
+- Initial Release
+
+[unreleased]: https://github.com/joe-mccarthy/nsp-ntfy/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/joe-mccarthy/nsp-ntfy/releases/tag/1.0.0
