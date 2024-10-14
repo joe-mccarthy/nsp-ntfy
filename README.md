@@ -17,10 +17,10 @@ Before deploying the nsp-ntfy it's important to ensure that you have the followi
 
 nsp-ntfy is written in Python and has been tested with the following Python versions:
 
-- Python 3.8
 - Python 3.9
 - Python 3.10
 - Python 3.11
+- Python 3.12
 
 The [nsp-ntfy.sh](nsp-ntfy.sh) runs within a virtual environment based on what's on your system path.
 

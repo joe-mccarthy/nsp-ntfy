@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#1](https://github.com/joe-mccarthy/nsp-ntfy/issues/1) Remove Python 3.8 as deprecated from end of October 24
+
 ## [1.0.0]
 
 - Initial Release
