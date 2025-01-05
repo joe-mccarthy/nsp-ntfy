@@ -3,6 +3,7 @@
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/joe-mccarthy/nsp-ntfy/build-and-test.yml?style=for-the-badge)
 ![Coveralls](https://img.shields.io/coverallsCoverage/github/joe-mccarthy/nsp-ntfy?style=for-the-badge)
 ![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/joe-mccarthy_nsp-ntfy?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)
+![PyPI - Version](https://img.shields.io/pypi/v/nsp-ntfy?style=for-the-badge)
 [![GitHub License](https://img.shields.io/github/license/joe-mccarthy/nsp-ntfy?cacheSeconds=1&style=for-the-badge)](LICENSE)
 
 The Night Sky Pi can be configured to publish messages to a local MQTT broker. The NSP-NTFY module can be configured to listen to these notifactions and publish the notification field to [ntfy.sh](ntfy.sh). This is so push notifications can be recieved on other devices without having to make the broker on the device public with routing.
