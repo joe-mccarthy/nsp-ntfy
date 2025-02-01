@@ -1,9 +1,9 @@
-black==24.10.0
-certifi==2024.12.14
+black==25.1.0
+certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8
 coverage==7.6.10
-dataclass-wizard==0.34.0
+dataclass-wizard==0.35.0
 exceptiongroup==1.2.2
 idna==3.10
 iniconfig==2.0.0
