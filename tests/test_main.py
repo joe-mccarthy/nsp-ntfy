@@ -1,8 +1,13 @@
 import unittest
 import pytest
 from unittest.mock import patch, MagicMock
-from src.app.data.data_classes import TopicConfig, Ntfy, NtfyModuleConfig, LoggingConfig
-from src.app.main import (
+from nsp_ntfy.app.data.data_classes import (
+    TopicConfig,
+    Ntfy,
+    NtfyModuleConfig,
+    LoggingConfig,
+)
+from nsp_ntfy.app.main import (
     get_configuration,
     send_notification,
     on_connect,
@@ -14,7 +19,7 @@ from src.app.main import (
 )
 
 
-@patch("src.app.main.module_configuration", autospec=True)
+@patch("nsp_ntfy.app.main.module_configuration", autospec=True)
 def test_get_configuration_found(mock_module_configuration):
     # Arrange
     topic = "test/topic"
@@ -28,7 +33,7 @@ def test_get_configuration_found(mock_module_configuration):
     assert result == expected_config
 
 
-@patch("src.app.main.module_configuration", autospec=True)
+@patch("nsp_ntfy.app.main.module_configuration", autospec=True)
 def test_get_configuration_not_found(mock_module_configuration):
     # Arrange
     topic = "test/topic"
@@ -43,7 +48,7 @@ def test_get_configuration_not_found(mock_module_configuration):
     assert result is None
 
 
-@patch("src.app.main.module_configuration", autospec=True)
+@patch("nsp_ntfy.app.main.module_configuration", autospec=True)
 def test_get_configuration_empty_configurations(mock_module_configuration):
     # Arrange
     topic = "test/topic"
@@ -55,7 +60,7 @@ def test_get_configuration_empty_configurations(mock_module_configuration):
     assert result is None
 
 
-@patch("src.app.main.module_configuration", autospec=True)
+@patch("nsp_ntfy.app.main.module_configuration", autospec=True)
 def test_get_configuration_found_second(mock_module_configuration):
     # Arrange
     topic = "test/topic"
@@ -69,7 +74,7 @@ def test_get_configuration_found_second(mock_module_configuration):
     assert result == expected_config
 
 
-@patch("src.app.main.module_configuration", autospec=True)
+@patch("nsp_ntfy.app.main.module_configuration", autospec=True)
 def test_get_configuration_not_found_third(mock_module_configuration):
     # Arrange
     topic = "test/topic"
@@ -84,7 +89,7 @@ def test_get_configuration_not_found_third(mock_module_configuration):
     assert result is None
 
 
-@patch("src.app.main.module_configuration", autospec=True)
+@patch("nsp_ntfy.app.main.module_configuration", autospec=True)
 def test_get_configuration_empty_configurations_second(mock_module_configuration):
     # Arrange
     topic = "test/topic"
@@ -96,7 +101,7 @@ def test_get_configuration_empty_configurations_second(mock_module_configuration
     assert result is None
 
 
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.logging")
 def test_on_connect(mock_logging):
     # Arrange
     client = MagicMock()
@@ -112,9 +117,9 @@ def test_on_connect(mock_logging):
     mock_logging.info.assert_called_once_with("connected to MQTT broker")
 
 
-@patch("src.app.main.get_configuration")
-@patch("src.app.main.send_notification")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.get_configuration")
+@patch("nsp_ntfy.app.main.send_notification")
+@patch("nsp_ntfy.app.main.logging")
 def test_on_message_with_configuration(
     mock_logging, mock_send_notification, mock_get_configuration
 ):
@@ -136,8 +141,8 @@ def test_on_message_with_configuration(
     mock_send_notification.assert_called_once_with(msg, topic_config)
 
 
-@patch("src.app.main.get_configuration")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.get_configuration")
+@patch("nsp_ntfy.app.main.logging")
 def test_on_message_without_configuration(mock_logging, mock_get_configuration):
     # Arrange
     client = MagicMock()
@@ -156,8 +161,8 @@ def test_on_message_without_configuration(mock_logging, mock_get_configuration):
     )
 
 
-@patch("src.app.main.requests.post")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.requests.post")
+@patch("nsp_ntfy.app.main.logging")
 def test_send_notification(mock_logging, mock_requests_post):
     # Arrange
     msg = MagicMock()
@@ -187,8 +192,8 @@ def test_send_notification(mock_logging, mock_requests_post):
     mock_logging.info.assert_called_once_with("notification sent to ntfy")
 
 
-@patch("src.app.main.isfile")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.isfile")
+@patch("nsp_ntfy.app.main.logging")
 def test_get_module_configuration_file_not_found(mock_logging, mock_isfile):
     # Arrange
     config_path = "invalid/path/to/config.json"
@@ -200,13 +205,13 @@ def test_get_module_configuration_file_not_found(mock_logging, mock_isfile):
     mock_logging.error.assert_called_once_with("Module Configuration file not found")
 
 
-@patch("src.app.main.isfile")
+@patch("nsp_ntfy.app.main.isfile")
 @patch(
-    "src.app.main.open",
+    "nsp_ntfy.app.main.open",
     new_callable=unittest.mock.mock_open,
     read_data='{"configurations": []}',
 )
-@patch("src.app.main.NtfyModuleConfig.from_dict")
+@patch("nsp_ntfy.app.main.NtfyModuleConfig.from_dict")
 def test_get_module_configuration_success(mock_from_dict, mock_open, mock_isfile):
     # Arrange
     config_path = "valid/path/to/config.json"
@@ -224,8 +229,8 @@ def test_get_module_configuration_success(mock_from_dict, mock_open, mock_isfile
     assert result == expected_config
 
 
-@patch("src.app.main.isfile")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.isfile")
+@patch("nsp_ntfy.app.main.logging")
 def test_get_nsp_configuration_file_not_found(mock_logging, mock_isfile):
     # Arrange
     config_path = "invalid/path/to/config.json"
@@ -237,14 +242,14 @@ def test_get_nsp_configuration_file_not_found(mock_logging, mock_isfile):
     mock_logging.error.assert_called_once_with("NSP Configuration file not found.")
 
 
-@patch("src.app.main.isfile")
+@patch("nsp_ntfy.app.main.isfile")
 @patch(
-    "src.app.main.open",
+    "nsp_ntfy.app.main.open",
     new_callable=unittest.mock.mock_open,
     read_data='{"logging": {}, "device": {}}',
 )
-@patch("src.app.main.LoggingConfig.from_dict")
-@patch("src.app.main.DeviceConfig.from_dict")
+@patch("nsp_ntfy.app.main.LoggingConfig.from_dict")
+@patch("nsp_ntfy.app.main.DeviceConfig.from_dict")
 def test_get_nsp_configuration_success(
     mock_device_from_dict, mock_logging_from_dict, mock_open, mock_isfile
 ):
@@ -269,8 +274,8 @@ def test_get_nsp_configuration_success(
     assert result == (expected_device_config, expected_logging_config)
 
 
-@patch("src.app.main.isfile")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.isfile")
+@patch("nsp_ntfy.app.main.logging")
 def test_get_nsp_configuration_file_not_found_log(mock_logging, mock_isfile):
     # Arrange
     config_path = "invalid/path/to/config.json"
@@ -282,14 +287,14 @@ def test_get_nsp_configuration_file_not_found_log(mock_logging, mock_isfile):
     mock_logging.error.assert_called_once_with("NSP Configuration file not found.")
 
 
-@patch("src.app.main.isfile")
+@patch("nsp_ntfy.app.main.isfile")
 @patch(
-    "src.app.main.open",
+    "nsp_ntfy.app.main.open",
     new_callable=unittest.mock.mock_open,
     read_data='{"logging": {}, "device": {}}',
 )
-@patch("src.app.main.LoggingConfig.from_dict")
-@patch("src.app.main.DeviceConfig.from_dict")
+@patch("nsp_ntfy.app.main.LoggingConfig.from_dict")
+@patch("nsp_ntfy.app.main.DeviceConfig.from_dict")
 def test_get_nsp_configuration_success_merge(
     mock_device_from_dict, mock_logging_from_dict, mock_open, mock_isfile
 ):
@@ -314,11 +319,11 @@ def test_get_nsp_configuration_success_merge(
     assert result == (expected_device_config, expected_logging_config)
 
 
-@patch("src.app.main.__get_module_configuration")
-@patch("src.app.main.__get_nsp_configuration")
-@patch("src.app.main.__configure_logging")
-@patch("src.app.main.mqtt.Client")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.__get_module_configuration")
+@patch("nsp_ntfy.app.main.__get_nsp_configuration")
+@patch("nsp_ntfy.app.main.__configure_logging")
+@patch("nsp_ntfy.app.main.mqtt.Client")
+@patch("nsp_ntfy.app.main.logging")
 def test_run_mqtt_enabled(
     mock_logging,
     mock_mqtt_client,
@@ -363,11 +368,11 @@ def test_run_mqtt_enabled(
     mock_mqtt_instance.loop_forever.assert_called_once()
 
 
-@patch("src.app.main.__get_module_configuration")
-@patch("src.app.main.__get_nsp_configuration")
-@patch("src.app.main.__configure_logging")
-@patch("src.app.main.mqtt.Client")
-@patch("src.app.main.logging")
+@patch("nsp_ntfy.app.main.__get_module_configuration")
+@patch("nsp_ntfy.app.main.__get_nsp_configuration")
+@patch("nsp_ntfy.app.main.__configure_logging")
+@patch("nsp_ntfy.app.main.mqtt.Client")
+@patch("nsp_ntfy.app.main.logging")
 def test_run_mqtt_disabled(
     mock_logging,
     mock_mqtt_client,

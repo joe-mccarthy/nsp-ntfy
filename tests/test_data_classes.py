@@ -1,6 +1,6 @@
 import pytest
 
-from app.data.data_classes import (
+from nsp_ntfy.app.data.data_classes import (
     ModuleLoggingConfig,
     LoggingConfig,
     LoggingFormatConfig,

@@ -10,23 +10,17 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python: ["3.9", "3.10", "3.11","3.12"]
-
+    runs-on: ubuntu-latest    
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python }}
-          cache: 'pip'
-      - name: Install tox and any other packages
-        run: pip install tox
-      - name: Run tox
-        # Run tox using the version of Python in `PATH`
-        run: tox -e py
+          python-version: 3.12
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Install the project dependencies
+        run: poetry install
+      - name: Run tests
+        run: poetry run pytest --cov=nsp_ntfy --cov-report xml --cov-report term
       - name: Coveralls
         uses: coverallsapp/github-action@v2
