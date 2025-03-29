@@ -4,8 +4,8 @@ version = "2.0.0"
 description = "Monitor configurable MQTT topics and forward the messages to ntfy.sh topics."
 authors = [{name = "Joe McCarthy",email = "179146301+joe-mccarthy@users.noreply.github.com"}]
 maintainers = [{name = "Joe McCarthy",email = "179146301+joe-mccarthy@users.noreply.github.com"}]
-homepage = "https://github.com/joe-mccarthy/nsp_ntfy"
-repository = "https://github.com/joe-mccarthy/nsp_ntfy"
+homepage = "https://github.com/joe-mccarthy/nsp-ntfy"
+repository = "https://github.com/joe-mccarthy/nsp-ntfy"
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.12"
