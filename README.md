@@ -16,12 +16,7 @@ Before deploying the nsp-ntfy it's important to ensure that you have the followi
 
 nsp-ntfy is written in Python and has been tested with the following Python versions:
 
-- Python 3.9
-- Python 3.10
-- Python 3.11
 - Python 3.12
-
-The [nsp-ntfy.sh](nsp-ntfy.sh) runs within a virtual environment based on what's on your system path.
 
 ### MQTT Broker
 
@@ -50,10 +45,9 @@ The next step is to configure the nsp-ntfy to use the MQTT broker, as MQTT event
 
 It's recommended that nsp-ntfy is run as a service. This ensures that it doesn't stop of user logging off and on system restarts to do this carry out the following.
 
-```bash
-# current working directory is the nsp-ntfy repository.
-sudo cp nsp.service /etc/systemd/system/nsp-ntfy.service
-sudo nano /etc/systemd/system/nsp-ntfy.service
+```sh
+pip install nsp-ntfy
+sudo nano /etc/systemd/system/nsp.service
 ```
 
 Next step is to update the service definition to the correct paths and running as the correct user.
@@ -67,11 +61,11 @@ After=network.target
 Type=Simple
 # update this to be your current user
 User=username 
-# the location of the nsp-ntfy repository
-WorkingDirectory=/home/username/repositories/nsp-ntfy/ 
+# the location of the nsp-ntfy to work within
+WorkingDirectory=/home/username/
 # update these paths to be the location of the nsp-ntfy.sh 
 # update argument to where you previously copied the json configuration.
-ExecStart=/home/username/repositories/nsp-ntfy/nsp-ntfy.sh /home/username/nsp-ntfy-config.json /home/username/nsp-config.json 
+ExecStart=nsp-ntfy /home/username/nsp-ntfy-config.json /home/username/nsp-config.json 
 Restart=on-failure
 
 [Install]
