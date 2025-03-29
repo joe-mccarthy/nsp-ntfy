@@ -1,0 +1,59 @@
+name: Publish and Release
+
+on:
+  push:
+    tags: [ '[0-9]+.[0-9]+.[0-9]+' ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest   
+    permissions:
+      contents: write
+      packages: write 
+    steps:    
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: Poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Install and Build
+        run: |
+          poetry install
+          poetry run pytest
+          poetry build
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$tag" \
+                --repo="$GITHUB_REPOSITORY" \
+                --title="${tag#v}" \
+                --generate-notes \
+                ./dist/*
+  pypi-publish:
+    name: Publish release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/nsp-ntfy
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: Poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Install and Build
+        run: |
+          poetry install
+          poetry run pytest
+          poetry build
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
