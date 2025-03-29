@@ -1,6 +1,6 @@
 import argparse
 
-from app.main import run
+from .app.main import run
 
 
 def nsp_ntfy():
@@ -9,7 +9,3 @@ def nsp_ntfy():
     parser.add_argument("-nsp", "--nsp_configuration", type=str, required=True)
     arguments = parser.parse_args(None)
     run(arguments)
-
-
-if __name__ == "__main__":
-    nsp_ntfy()
