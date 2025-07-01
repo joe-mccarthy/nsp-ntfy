@@ -6,15 +6,34 @@
 ![PyPI - Version](https://img.shields.io/pypi/v/nsp-ntfy?style=for-the-badge)
 [![GitHub License](https://img.shields.io/github/license/joe-mccarthy/nsp-ntfy?cacheSeconds=1&style=for-the-badge)](LICENSE)
 
-The Night Sky Pi can be configured to publish messages to a local MQTT broker. The NSP-NTFY module can be configured to listen to these notifactions and publish the notification field to [ntfy.sh](ntfy.sh). This is so push notifications can be recieved on other devices without having to make the broker on the device public with routing.
+## Overview
+
+NSP-NTFY is a bridge between Night Sky Pi's MQTT messages and [ntfy.sh](https://ntfy.sh) push notifications. When Night Sky Pi detects events (like satellite passes or ISS visibility), it can publish these to a local MQTT broker. NSP-NTFY subscribes to these events and forwards them as push notifications to your devices via ntfy.sh, allowing you to receive real-time astronomy alerts without exposing your local network.
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+  - [Python](#python)
+  - [MQTT Broker](#mqtt-broker)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [NSP Configuration](#nsp-configuration)
+  - [NSP-NTFY Configuration](#nsp-ntfy-configuration)
+- [Usage](#usage)
+  - [Running as a Service](#running-as-a-service)
+  - [Manual Execution](#manual-execution)
+- [Notification Examples](#notification-examples)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Prerequisites
 
-Before deploying the nsp-ntfy it's important to ensure that you have the following configured as there are dependencies. However the installation of an MQTT broker is optional I usually have it installed instead of needing to remember to do it when starting up other applications.
+Before deploying NSP-NTFY, ensure you have the following prerequisites configured:
 
 ### Python
 
-nsp-ntfy is written in Python and has been tested with the following Python versions:
+NSP-NTFY is written in Python and has been tested with the following Python versions:
 
 - Python 3.12
 
@@ -30,7 +49,23 @@ sudo systemctl enable mosquitto.service
 sudo reboot # Just something I like to do, this is optional as well
 ```
 
-The next step is to configure the nsp-ntfy to use the MQTT broker, as MQTT events are disabled by default. These configuration items are in the nsp configuration not the configuration of the nsp-ntfy module.
+## Installation
+
+Installing NSP-NTFY is straightforward using pip:
+
+```bash
+# Install from PyPI
+pip install nsp-ntfy
+
+# Or install development version directly from GitHub
+pip install git+https://github.com/joe-mccarthy/nsp-ntfy.git
+```
+
+## Configuration
+
+### NSP Configuration
+
+First, ensure your Night Sky Pi is configured to publish MQTT messages. These settings are in the Night Sky Pi configuration file:
 
 ```json
 "device" : {
@@ -41,16 +76,61 @@ The next step is to configure the nsp-ntfy to use the MQTT broker, as MQTT event
 }
 ```
 
-## Running NSP-NTFY
+### NSP-NTFY Configuration
 
-It's recommended that nsp-ntfy is run as a service. This ensures that it doesn't stop of user logging off and on system restarts to do this carry out the following.
+Create a configuration file for NSP-NTFY (`nsp-ntfy-config.json`):
 
-```sh
-pip install nsp-ntfy
-sudo nano /etc/systemd/system/nsp.service
+```json
+{
+  "mqtt": {
+    "broker": "127.0.0.1",
+    "port": 1883,
+    "username": "",
+    "password": "",
+    "topic": "nsp/notifications/#"
+  },
+  "ntfy": {
+    "server": "https://ntfy.sh",
+    "topic": "your-unique-topic-name",
+    "priority": "default",
+    "tags": ["satellite", "astronomy"]
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "/var/log/nsp-ntfy.log"
+  }
+}
 ```
 
-Next step is to update the service definition to the correct paths and running as the correct user.
+Configuration options explained:
+
+- **MQTT Settings**:
+  - `broker`: Address of your MQTT broker (default: 127.0.0.1)
+  - `port`: MQTT broker port (default: 1883)
+  - `username` & `password`: Credentials if your broker requires authentication
+  - `topic`: MQTT topic pattern to subscribe to (default: "nsp/notifications/#")
+
+- **NTFY Settings**:
+  - `server`: NTFY server URL (default: https://ntfy.sh)
+  - `topic`: Your unique notification topic - keep this private as anyone with this name can send/receive notifications
+  - `priority`: Default notification priority (default, min, low, high, urgent)
+  - `tags`: Default tags to include with notifications
+
+- **Logging Settings**:
+  - `level`: Logging level (DEBUG, INFO, WARNING, ERROR)
+  - `file`: Log file path
+
+## Usage
+
+### Running as a Service
+
+It's recommended that NSP-NTFY is run as a service. This ensures that it doesn't stop if a user logs off and continues running after system restarts.
+
+```bash
+sudo nano /etc/systemd/system/nsp-ntfy.service
+```
+
+Next step is to update the service definition to the correct paths and running as the correct user:
 
 ```bash
 [Unit]
@@ -74,10 +154,39 @@ WantedBy=multi-user.target
 
 Next is to enable and start the service.
 
-```sh
+```bash
 sudo systemctl daemon-reload
 sudo systemctl start nsp-ntfy
 sudo systemctl enable nsp-ntfy
+```
+
+### Manual Execution
+
+To run NSP-NTFY manually, execute the following command:
+
+```bash
+nsp-ntfy /path/to/nsp-ntfy-config.json /path/to/nsp-config.json
+```
+
+## Notification Examples
+
+Here are some examples of notifications you might receive:
+
+- **Satellite Pass**: "Satellite XYZ will be visible at 10:15 PM for 5 minutes."
+- **ISS Visibility**: "The ISS will be visible at 9:30 PM for 6 minutes."
+- **Astronomy Alert**: "Meteor shower peak tonight at 11:00 PM."
+
+## Troubleshooting
+
+If you encounter issues, check the following:
+
+1. **Logs**: Review the log file specified in the configuration (`/var/log/nsp-ntfy.log`).
+2. **MQTT Broker**: Ensure the MQTT broker is running and accessible.
+3. **Configuration**: Verify the configuration files for any errors.
+4. **Service Status**: Check the status of the NSP-NTFY service:
+
+```bash
+sudo systemctl status nsp-ntfy
 ```
 
 ## Contributing
