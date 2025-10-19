@@ -25,8 +25,8 @@ build-backend = "poetry.core.masonry.api"
 nsp-ntfy = "nsp_ntfy.entry:nsp_ntfy"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4.1"
-coverage = "^7.10.6"
-pytest-cov = "^6.2.1"
-black = "^25.1.0"
+pytest = "^8.4.2"
+coverage = "^7.10.7"
+pytest-cov = "^7.0.0"
+black = "^25.9.0"
 
